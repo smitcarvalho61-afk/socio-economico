@@ -1,0 +1,2467 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Pesquisa Socioeconômica</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f6f9;
+            color: #172033;
+        }
+
+        /* =========================
+           CABEÇALHO
+        ========================= */
+
+        header {
+            background: linear-gradient(135deg, #172554, #312e81);
+            color: white;
+            padding: 55px 20px 40px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 38px;
+            margin-bottom: 12px;
+        }
+
+        header p {
+            font-size: 17px;
+            color: #dbeafe;
+            max-width: 700px;
+            margin: auto;
+            line-height: 1.6;
+        }
+
+        /* =========================
+           MENU
+        ========================= */
+
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+
+            background: white;
+
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+
+            padding: 14px 10px;
+
+            border-bottom: 1px solid #e5e7eb;
+
+            box-shadow: 0 4px 15px rgba(0,0,0,.08);
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #334155;
+
+            padding: 11px 18px;
+
+            border-radius: 10px;
+
+            font-weight: bold;
+
+            transition: .2s;
+        }
+
+        nav a:hover {
+            background: #eef2ff;
+            color: #4338ca;
+        }
+
+        /* =========================
+           CONTAINER
+        ========================= */
+
+        .container {
+            width: 94%;
+            max-width: 1150px;
+            margin: 35px auto;
+        }
+
+        /* =========================
+           PARTICIPANTES
+        ========================= */
+
+        .participantes {
+            background: white;
+
+            border-radius: 18px;
+
+            padding: 25px;
+
+            text-align: center;
+
+            box-shadow: 0 8px 25px rgba(15,23,42,.08);
+
+            margin-bottom: 45px;
+        }
+
+        .participantes span {
+            display: block;
+            color: #64748b;
+            margin-bottom: 7px;
+        }
+
+        .participantes strong {
+            font-size: 42px;
+            color: #312e81;
+        }
+
+        /* =========================
+           CATEGORIA
+        ========================= */
+
+        .categoria {
+            margin-bottom: 80px;
+            scroll-margin-top: 90px;
+        }
+
+        .categoria-header {
+            border-radius: 18px;
+
+            padding: 28px;
+
+            margin-bottom: 25px;
+
+            color: white;
+
+            box-shadow: 0 10px 30px rgba(15,23,42,.12);
+        }
+
+        .educacao-header {
+            background: linear-gradient(
+                135deg,
+                #1d4ed8,
+                #4338ca
+            );
+        }
+
+        .pessoal-header {
+            background: linear-gradient(
+                135deg,
+                #047857,
+                #0f766e
+            );
+        }
+
+        .profissional-header {
+            background: linear-gradient(
+                135deg,
+                #b45309,
+                #c2410c
+            );
+        }
+
+        .categoria-header .numero {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: .8;
+            margin-bottom: 8px;
+        }
+
+        .categoria-header h2 {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .categoria-header p {
+            font-size: 15px;
+            opacity: .9;
+        }
+
+        /* =========================
+           QUESTÃO
+        ========================= */
+
+        .questao {
+            background: white;
+
+            border-radius: 16px;
+
+            padding: 25px;
+
+            margin-bottom: 20px;
+
+            border: 1px solid #e5e7eb;
+
+            box-shadow: 0 5px 20px rgba(15,23,42,.06);
+        }
+
+        .questao-numero {
+            display: inline-block;
+
+            background: #eef2ff;
+            color: #4338ca;
+
+            padding: 5px 10px;
+
+            border-radius: 7px;
+
+            font-size: 13px;
+
+            font-weight: bold;
+
+            margin-bottom: 10px;
+        }
+
+        .questao h3 {
+            font-size: 18px;
+
+            line-height: 1.5;
+
+            margin-bottom: 18px;
+
+            color: #172033;
+        }
+
+        .opcoes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+
+            gap: 10px;
+        }
+
+        .opcao {
+            display: flex;
+            align-items: center;
+
+            background: #f8fafc;
+
+            border: 1px solid #e2e8f0;
+
+            padding: 13px;
+
+            border-radius: 10px;
+
+            cursor: pointer;
+
+            transition: .2s;
+        }
+
+        .opcao:hover {
+            border-color: #6366f1;
+            background: #eef2ff;
+        }
+
+        .opcao input {
+            margin-right: 10px;
+        }
+
+        /* =========================
+           BOTÕES
+        ========================= */
+
+        .botoes {
+            display: flex;
+
+            justify-content: center;
+
+            gap: 15px;
+
+            flex-wrap: wrap;
+
+            margin: 50px 0;
+        }
+
+        button {
+            border: none;
+
+            border-radius: 12px;
+
+            padding: 15px 28px;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: .2s;
+        }
+
+        .enviar {
+            background: #4338ca;
+            color: white;
+        }
+
+        .enviar:hover {
+            background: #3730a3;
+            transform: translateY(-2px);
+        }
+
+        .apagar {
+            background: #dc2626;
+            color: white;
+        }
+
+        .apagar:hover {
+            background: #b91c1c;
+        }
+
+        .mensagem {
+            text-align: center;
+
+            min-height: 25px;
+
+            color: #15803d;
+
+            font-weight: bold;
+        }
+
+        /* =========================
+           RESULTADOS
+        ========================= */
+
+        #resultados {
+            margin-top: 40px;
+        }
+
+        .resultados-categoria {
+            margin-bottom: 80px;
+
+            scroll-margin-top: 90px;
+        }
+
+        .resultado-titulo {
+            padding: 25px;
+
+            border-radius: 16px;
+
+            color: white;
+
+            margin-bottom: 25px;
+        }
+
+        .resultado-educacao {
+            background: linear-gradient(
+                135deg,
+                #1d4ed8,
+                #4338ca
+            );
+        }
+
+        .resultado-pessoal {
+            background: linear-gradient(
+                135deg,
+                #047857,
+                #0f766e
+            );
+        }
+
+        .resultado-profissional {
+            background: linear-gradient(
+                135deg,
+                #b45309,
+                #c2410c
+            );
+        }
+
+        .resultado-titulo h2 {
+            font-size: 27px;
+        }
+
+        .resultado-titulo p {
+            margin-top: 6px;
+            opacity: .9;
+        }
+
+        /* =========================
+           GRÁFICOS
+        ========================= */
+
+        .grafico {
+            background: white;
+
+            border: 1px solid #e5e7eb;
+
+            border-radius: 16px;
+
+            padding: 25px;
+
+            margin-bottom: 20px;
+
+            box-shadow: 0 5px 20px rgba(15,23,42,.06);
+        }
+
+        .grafico h3 {
+            color: #172033;
+
+            line-height: 1.5;
+
+            margin-bottom: 20px;
+        }
+
+        .canvas-container {
+            width: 100%;
+            max-width: 430px;
+
+            margin: auto;
+        }
+
+        .porcentagens {
+            margin-top: 20px;
+
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 8px;
+        }
+
+        .porcentagem {
+            background: #f8fafc;
+
+            border: 1px solid #e2e8f0;
+
+            padding: 10px;
+
+            border-radius: 8px;
+
+            color: #475569;
+
+            font-size: 14px;
+        }
+
+        /* =========================
+           RODAPÉ
+        ========================= */
+
+        footer {
+            margin-top: 80px;
+
+            background: #172033;
+
+            color: #94a3b8;
+
+            text-align: center;
+
+            padding: 30px;
+        }
+
+        /* Tema automático conforme a preferência do dispositivo */
+        @media (prefers-color-scheme: dark) {
+            :root { color-scheme: dark; }
+            body { background: #0b1120; color: #e5e7eb; }
+            nav { background: #111827; border-bottom-color: #334155; }
+            nav a { color: #e2e8f0; }
+            nav a:hover { background: #1e293b; color: #c7d2fe; }
+            .participantes, .questao, .grafico { background: #111827; border-color: #334155; color: #e5e7eb; }
+            .questao h3, .grafico h3 { color: #f1f5f9; }
+            .opcao { background: #1f2937; border-color: #374151; color: #e5e7eb; }
+            .opcao:hover { background: #273449; }
+            .porcentagem { background: #1f2937; border-color: #374151; color: #e2e8f0; }
+            .mensagem { color: #e5e7eb; }
+            input, select, textarea { color-scheme: dark; }
+            footer { background: #030712; color: #cbd5e1; }
+        }
+
+        /* =========================
+           RESPONSIVO
+        ========================= */
+
+        @media (max-width: 700px) {
+
+            header h1 {
+                font-size: 28px;
+            }
+
+            nav {
+                overflow-x: auto;
+                justify-content: flex-start;
+            }
+
+            nav a {
+                white-space: nowrap;
+            }
+
+            .opcoes {
+                grid-template-columns: 1fr;
+            }
+
+            .porcentagens {
+                grid-template-columns: 1fr;
+            }
+
+            .categoria-header h2 {
+                font-size: 25px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     CABEÇALHO
+========================= -->
+
+<header>
+
+    <h1>Pesquisa Socioeconômica</h1>
+
+    <p>
+        Questionário dividido em três áreas:
+        Educação, Pessoal e Profissional.
+    </p>
+
+</header>
+
+
+<!-- =========================
+     MENU
+========================= -->
+
+<nav>
+
+    <a href="#educacao">
+        📚 Educação
+    </a>
+
+    <a href="#pessoal">
+        👤 Pessoal
+    </a>
+
+    <a href="#profissional">
+        💼 Profissional
+    </a>
+
+    <a href="#resultados">
+        📊 Resultados
+    </a>
+
+</nav>
+
+
+<div class="container">
+
+
+    <!-- =========================
+         PARTICIPANTES
+    ========================= -->
+
+    <div class="participantes">
+
+        <span>
+            Total de participantes
+        </span>
+
+        <strong id="totalParticipantes">
+            0
+        </strong>
+
+    </div>
+
+
+    <form id="formulario">
+
+
+        <!-- =====================================================
+             EDUCAÇÃO
+        ====================================================== -->
+
+        <section
+            class="categoria"
+            id="educacao"
+        >
+
+            <div
+                class="categoria-header educacao-header"
+            >
+
+                <div class="numero">
+                    Categoria 01
+                </div>
+
+                <h2>
+                    📚 Educação
+                </h2>
+
+                <p>
+                    Questões relacionadas à formação,
+                    escolaridade e trajetória educacional.
+                </p>
+
+            </div>
+
+
+            <!-- EDUCAÇÃO 1 -->
+
+            <div class="questao">
+
+                <span class="questao-numero">
+                    Educação • 01
+                </span>
+
+                <h3>
+                    Qual é o seu nível de escolaridade?
+                </h3>
+
+                <div class="opcoes">
+
+                    <label class="opcao">
+                        <input
+                            type="radio"
+                            name="educacao1"
+                            value="Ensino fundamental"
+                        >
+                        Ensino fundamental
+                    </label>
+
+                    <label class="opcao">
+                        <input
+                            type="radio"
+                            name="educacao1"
+                            value="Ensino médio incompleto"
+                        >
+                        Ensino médio incompleto
+                    </label>
+
+                    <label class="opcao">
+                        <input
+                            type="radio"
+                            name="educacao1"
+                            value="Ensino médio completo"
+                        >
+                        Ensino médio completo
+                    </label>
+
+                    <label class="opcao">
+                        <input
+                            type="radio"
+                            name="educacao1"
+                            value="Ensino superior incompleto"
+                        >
+                        Ensino superior incompleto
+                    </label>
+
+                    <label class="opcao">
+                        <input
+                            type="radio"
+                            name="educacao1"
+                            value="Ensino superior completo"
+                        >
+                        Ensino superior completo
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <!-- EDUCAÇÃO 2 -->
+
+            <div class="questao">
+
+                <span class="questao-numero">
+                    Educação • 02
+                </span>
+
+                <h3>
+                    Qual é o nível de escolaridade da sua mãe?
+                </h3>
+
+                <div class="opcoes">
+
+                    <label class="opcao">
+                        <input type="radio" name="educacao2" value="Ensino fundamental">
+                        Ensino fundamental
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="educacao2" value="Ensino médio">
+                        Ensino médio
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="educacao2" value="Ensino superior">
+                        Ensino superior
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="educacao2" value="Pós-graduação">
+                        Pós-graduação
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="educacao2" value="Não sei informar">
+                        Não sei informar
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <!-- EDUCAÇÃO 3 -->
+
+            <div class="questao">
+
+                <span class="questao-numero">
+                    Educação • 03
+                </span>
+
+                <h3>
+                    Qual é o nível de escolaridade do seu pai?
+                </h3>
+
+                <div class="opcoes">
+
+                    <label class="opcao">
+                        <input type="radio" name="educacao3" value="Ensino fundamental">
+                        Ensino fundamental
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="educacao3" value="Ensino médio">
+                        Ensino médio
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="educacao3" value="Ensino superior">
+                        Ensino superior
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="educacao3" value="Pós-graduação">
+                        Pós-graduação
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="educacao3" value="Não sei informar">
+                        Não sei informar
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <!-- EDUCAÇÃO 4 -->
+
+            <div class="questao">
+
+                <span class="questao-numero">
+                    Educação • 04
+                </span>
+
+                <h3>
+                    Como você avalia sua convivência na escola?
+                </h3>
+
+                <div class="opcoes">
+
+                    <label class="opcao">
+                        <input type="radio" name="educacao4" value="Muito boa">
+                        Muito boa
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="educacao4" value="Boa">
+                        Boa
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="educacao4" value="Regular">
+                        Regular
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="educacao4" value="Ruim">
+                        Ruim
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <!-- EDUCAÇÃO 5 -->
+
+            <div class="questao">
+
+                <span class="questao-numero">
+                    Educação • 05
+                </span>
+
+                <h3>
+                    Quantas horas por dia você costuma estudar fora da escola?
+                </h3>
+
+                <div class="opcoes">
+
+                    <label class="opcao">
+                        <input type="radio" name="educacao5" value="Menos de 1 hora">
+                        Menos de 1 hora
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="educacao5" value="1 a 2 horas">
+                        1 a 2 horas
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="educacao5" value="2 a 3 horas">
+                        2 a 3 horas
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="educacao5" value="Mais de 3 horas">
+                        Mais de 3 horas
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="educacao5" value="Não estudo">
+                        Não estudo fora da escola
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <!-- EDUCAÇÃO 6 -->
+
+            <div class="questao">
+
+                <span class="questao-numero">
+                    Educação • 06
+                </span>
+
+                <h3>
+                    Você pretende cursar o ensino superior?
+                </h3>
+
+                <div class="opcoes">
+
+                    <label class="opcao">
+                        <input type="radio" name="educacao6" value="Sim">
+                        Sim
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="educacao6" value="Não">
+                        Não
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="educacao6" value="Ainda não sei">
+                        Ainda não sei
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <!-- EDUCAÇÃO 7 -->
+
+            <div class="questao">
+
+                <span class="questao-numero">
+                    Educação • 07
+                </span>
+
+                <h3>
+                    Você já participou de algum curso além da escola?
+                </h3>
+
+                <div class="opcoes">
+
+                    <label class="opcao">
+                        <input type="radio" name="educacao7" value="Sim">
+                        Sim
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="educacao7" value="Não">
+                        Não
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <!-- EDUCAÇÃO 8 -->
+
+            <div class="questao">
+
+                <span class="questao-numero">
+                    Educação • 08
+                </span>
+
+                <h3>
+                    Qual área de estudo você tem mais interesse?
+                </h3>
+
+                <div class="opcoes">
+
+                    <label class="opcao">
+                        <input type="radio" name="educacao8" value="Ciências Humanas">
+                        Ciências Humanas
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="educacao8" value="Ciências Exatas">
+                        Ciências Exatas
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="educacao8" value="Ciências Biológicas">
+                        Ciências Biológicas
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="educacao8" value="Linguagens">
+                        Linguagens
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="educacao8" value="Ainda não sei">
+                        Ainda não sei
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <!-- EDUCAÇÃO 9 -->
+
+            <div class="questao">
+
+                <span class="questao-numero">
+                    Educação • 09
+                </span>
+
+                <h3>
+                    Você pretende continuar estudando depois de concluir o ensino médio?
+                </h3>
+
+                <div class="opcoes">
+
+                    <label class="opcao">
+                        <input type="radio" name="educacao9" value="Sim">
+                        Sim
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="educacao9" value="Não">
+                        Não
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="educacao9" value="Ainda não sei">
+                        Ainda não sei
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <!-- EDUCAÇÃO 10 -->
+
+            <div class="questao">
+
+                <span class="questao-numero">
+                    Educação • 10
+                </span>
+
+                <h3>
+                    Com que frequência você utiliza a internet para estudar?
+                </h3>
+
+                <div class="opcoes">
+
+                    <label class="opcao">
+                        <input type="radio" name="educacao10" value="Todos os dias">
+                        Todos os dias
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="educacao10" value="Algumas vezes por semana">
+                        Algumas vezes por semana
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="educacao10" value="Raramente">
+                        Raramente
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="educacao10" value="Nunca">
+                        Nunca
+                    </label>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             PESSOAL
+        ====================================================== -->
+
+        <section
+            class="categoria"
+            id="pessoal"
+        >
+
+            <div class="categoria-header pessoal-header">
+
+                <div class="numero">
+                    Categoria 02
+                </div>
+
+                <h2>
+                    👤 Pessoal
+                </h2>
+
+                <p>
+                    Questões sobre características pessoais,
+                    residência e condições de vida.
+                </p>
+
+            </div>
+
+
+            <!-- PESSOAL 1 -->
+
+            <div class="questao">
+
+                <span class="questao-numero">
+                    Pessoal • 01
+                </span>
+
+                <h3>
+                    Qual é a sua idade?
+                </h3>
+
+                <div class="opcoes">
+
+                    <label class="opcao">
+                        <input type="radio" name="pessoal1" value="Menos de 15 anos">
+                        Menos de 15 anos
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="pessoal1" value="15 anos">
+                        15 anos
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="pessoal1" value="16 anos">
+                        16 anos
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="pessoal1" value="17 anos">
+                        17 anos
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="pessoal1" value="18 anos ou mais">
+                        18 anos ou mais
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <!-- PESSOAL 2 -->
+
+            <div class="questao">
+
+                <span class="questao-numero">
+                    Pessoal • 02
+                </span>
+
+                <h3>
+                    Quantas pessoas moram com você?
+                </h3>
+
+                <div class="opcoes">
+
+                    <label class="opcao">
+                        <input type="radio" name="pessoal2" value="Moro sozinho(a)">
+                        Moro sozinho(a)
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="pessoal2" value="1 a 2 pessoas">
+                        1 a 2 pessoas
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="pessoal2" value="3 pessoas">
+                        3 pessoas
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="pessoal2" value="4 pessoas">
+                        4 pessoas
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="pessoal2" value="5 ou mais pessoas">
+                        5 ou mais pessoas
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <!-- PESSOAL 3 -->
+
+            <div class="questao">
+
+                <span class="questao-numero">
+                    Pessoal • 03
+                </span>
+
+                <h3>
+                    Quantos celulares existem na sua casa?
+                </h3>
+
+                <div class="opcoes">
+
+                    <label class="opcao">
+                        <input type="radio" name="pessoal3" value="Nenhum">
+                        Nenhum
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="pessoal3" value="1">
+                        1
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="pessoal3" value="2">
+                        2
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="pessoal3" value="3">
+                        3
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="pessoal3" value="4 ou mais">
+                        4 ou mais
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <!-- PESSOAL 4 -->
+
+            <div class="questao">
+
+                <span class="questao-numero">
+                    Pessoal • 04
+                </span>
+
+                <h3>
+                    Quantos aparelhos eletrônicos existem na sua casa?
+                </h3>
+
+                <div class="opcoes">
+
+                    <label class="opcao">
+                        <input type="radio" name="pessoal4" value="Nenhum">
+                        Nenhum
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="pessoal4" value="1 a 2">
+                        1 a 2
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="pessoal4" value="3 a 4">
+                        3 a 4
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="pessoal4" value="5 ou mais">
+                        5 ou mais
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <!-- PESSOAL 5 -->
+
+            <div class="questao">
+
+                <span class="questao-numero">
+                    Pessoal • 05
+                </span>
+
+                <h3>
+                    Quantos automóveis existem na sua casa?
+                </h3>
+
+                <div class="opcoes">
+
+                    <label class="opcao">
+                        <input type="radio" name="pessoal5" value="Nenhum">
+                        Nenhum
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="pessoal5" value="1">
+                        1
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="pessoal5" value="2">
+                        2
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="pessoal5" value="3 ou mais">
+                        3 ou mais
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <!-- PESSOAL 6 -->
+
+            <div class="questao">
+
+                <span class="questao-numero">
+                    Pessoal • 06
+                </span>
+
+                <h3>
+                    Na sua casa possui acesso à internet?
+                </h3>
+
+                <div class="opcoes">
+
+                    <label class="opcao">
+                        <input type="radio" name="pessoal6" value="Sim">
+                        Sim
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="pessoal6" value="Não">
+                        Não
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <!-- PESSOAL 7 -->
+
+            <div class="questao">
+
+                <span class="questao-numero">
+                    Pessoal • 07
+                </span>
+
+                <h3>
+                    Na sua casa possui notebook ou computador?
+                </h3>
+
+                <div class="opcoes">
+
+                    <label class="opcao">
+                        <input type="radio" name="pessoal7" value="Sim">
+                        Sim
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="pessoal7" value="Não">
+                        Não
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <!-- PESSOAL 8 -->
+
+            <div class="questao">
+
+                <span class="questao-numero">
+                    Pessoal • 08
+                </span>
+
+                <h3>
+                    Você possui um quarto próprio?
+                </h3>
+
+                <div class="opcoes">
+
+                    <label class="opcao">
+                        <input type="radio" name="pessoal8" value="Sim">
+                        Sim
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="pessoal8" value="Não">
+                        Não
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <!-- PESSOAL 9 -->
+
+            <div class="questao">
+
+                <span class="questao-numero">
+                    Pessoal • 09
+                </span>
+
+                <h3>
+                    Qual é a sua raça/cor?
+                </h3>
+
+                <div class="opcoes">
+
+                    <label class="opcao">
+                        <input type="radio" name="pessoal9" value="Branca">
+                        Branca
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="pessoal9" value="Preta">
+                        Preta
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="pessoal9" value="Parda">
+                        Parda
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="pessoal9" value="Amarela">
+                        Amarela
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="pessoal9" value="Indígena">
+                        Indígena
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="pessoal9" value="Prefiro não informar">
+                        Prefiro não informar
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <!-- PESSOAL 10 -->
+
+            <div class="questao">
+
+                <span class="questao-numero">
+                    Pessoal • 10
+                </span>
+
+                <h3>
+                    Você possui algum meio de transporte próprio?
+                </h3>
+
+                <div class="opcoes">
+
+                    <label class="opcao">
+                        <input type="radio" name="pessoal10" value="Carro">
+                        Carro
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="pessoal10" value="Motocicleta">
+                        Motocicleta
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="pessoal10" value="Bicicleta">
+                        Bicicleta
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="pessoal10" value="Não possuo">
+                        Não possuo
+                    </label>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             PROFISSIONAL
+        ====================================================== -->
+
+        <section class="categoria" id="profissional">
+            <div class="categoria-header profissional-header">
+                <div class="numero">Categoria 03</div>
+                <h2>💼 Profissional</h2>
+                <p>Questões sobre planos de carreira, emprego e expectativas profissionais.</p>
+            </div>
+
+            <!-- PROFISSIONAL 01 -->
+            <div class="questao">
+                <span class="questao-numero">Profissional • 01</span>
+                <h3>Até onde você pretende ir na sua carreira profissional?</h3>
+                <div class="opcoes">
+                    <label class="opcao">
+                        <input type="radio" name="profissional1" value="Funcionário">
+                        Funcionário
+                    </label>
+                    <label class="opcao">
+                        <input type="radio" name="profissional1" value="Dono de um negócio">
+                        Dono de um negócio
+                    </label>
+                    <label class="opcao">
+                        <input type="radio" name="profissional1" value="Ser seu próprio patrão">
+                        Ser seu próprio patrão
+                    </label>
+                </div>
+            </div>
+
+            <!-- PROFISSIONAL 02 -->
+            <div class="questao">
+                <span class="questao-numero">Profissional • 02</span>
+                <h3>Aproximadamente, quanto você imagina ganhar daqui a 10 anos?</h3>
+                <div class="opcoes">
+                    <label class="opcao">
+                        <input type="radio" name="profissional2" value="1 salário mínimo">
+                        1 salário mínimo
+                    </label>
+                    <label class="opcao">
+                        <input type="radio" name="profissional2" value="2 ou 3 salários mínimos">
+                        2 ou 3 salários mínimos
+                    </label>
+                    <label class="opcao">
+                        <input type="radio" name="profissional2" value="4 a 5 salários mínimos">
+                        4 a 5 salários mínimos
+                    </label>
+                    <label class="opcao">
+                        <input type="radio" name="profissional2" value="6 ou mais">
+                        6 ou mais
+                    </label>
+                </div>
+            </div>
+
+            <!-- PROFISSIONAL 03 -->
+            <div class="questao">
+                <span class="questao-numero">Profissional • 03</span>
+                <h3>Você já possui um emprego?</h3>
+                <div class="opcoes">
+                    <label class="opcao">
+                        <input type="radio" name="profissional3" value="Sim">
+                        Sim
+                    </label>
+                    <label class="opcao">
+                        <input type="radio" name="profissional3" value="Não">
+                        Não
+                    </label>
+                </div>
+            </div>
+
+            <!-- PROFISSIONAL 04 -->
+            <div class="questao">
+                <span class="questao-numero">Profissional • 04</span>
+                <h3>Se sim, qual é a sua renda mensal?</h3>
+                <div class="opcoes">
+                    <label class="opcao">
+                        <input type="radio" name="profissional4" value="Até 500 reais">
+                        Até 500 reais
+                    </label>
+                    <label class="opcao">
+                        <input type="radio" name="profissional4" value="Até 1000 reais">
+                        Até 1000 reais
+                    </label>
+                    <label class="opcao">
+                        <input type="radio" name="profissional4" value="Mais de 1000 reais">
+                        Mais de 1000 reais
+                    </label>
+                    <label class="opcao">
+                        <input type="radio" name="profissional4" value="Não trabalho">
+                        Não trabalho
+                    </label>
+                </div>
+            </div>
+
+            <!-- PROFISSIONAL 05 -->
+            <div class="questao">
+                <span class="questao-numero">Profissional • 05</span>
+                <h3>Você se deslocaria para outra cidade em busca de emprego?</h3>
+                <div class="opcoes">
+                    <label class="opcao">
+                        <input type="radio" name="profissional5" value="Sim">
+                        Sim
+                    </label>
+                    <label class="opcao">
+                        <input type="radio" name="profissional5" value="Não">
+                        Não
+                    </label>
+                    <label class="opcao">
+                        <input type="radio" name="profissional5" value="Não sei">
+                        Não sei
+                    </label>
+                </div>
+            </div>
+
+            <!-- PROFISSIONAL 06 -->
+            <div class="questao">
+                <span class="questao-numero">Profissional • 06</span>
+                <h3>Para onde você pretende migrar para construir sua carreira profissional?</h3>
+                <div class="opcoes">
+                    <label class="opcao">
+                        <input type="radio" name="profissional6" value="Outra cidade">
+                        Outra cidade
+                    </label>
+                    <label class="opcao">
+                        <input type="radio" name="profissional6" value="Outro estado">
+                        Outro estado
+                    </label>
+                    <label class="opcao">
+                        <input type="radio" name="profissional6" value="Outro país">
+                        Outro país
+                    </label>
+                    <label class="opcao">
+                        <input type="radio" name="profissional6" value="Não pretendo">
+                        Não pretendo
+                    </label>
+                </div>
+            </div>
+
+            <!-- PROFISSIONAL 07 -->
+            <div class="questao">
+                <span class="questao-numero">Profissional • 07</span>
+                <h3>Você pretende estar em um emprego em que seja bem remunerado ou em que goste do que faz?</h3>
+                <div class="opcoes">
+                    <label class="opcao">
+                        <input type="radio" name="profissional7" value="Bem remunerado">
+                        Bem remunerado
+                    </label>
+                    <label class="opcao">
+                        <input type="radio" name="profissional7" value="Em que eu goste">
+                        Em que eu goste
+                    </label>
+                </div>
+            </div>
+
+            <!-- PROFISSIONAL 08 -->
+            <div class="questao">
+                <span class="questao-numero">Profissional • 08</span>
+                <h3>Em que ramo você pretende trabalhar?</h3>
+                <div class="opcoes">
+                    <label class="opcao">
+                        <input type="radio" name="profissional8" value="Saúde">
+                        Saúde
+                    </label>
+                    <label class="opcao">
+                        <input type="radio" name="profissional8" value="Tecnologia">
+                        Tecnologia
+                    </label>
+                    <label class="opcao">
+                        <input type="radio" name="profissional8" value="Engenharia">
+                        Engenharia
+                    </label>
+                    <label class="opcao">
+                        <input type="radio" name="profissional8" value="Outro">
+                        Outro
+                    </label>
+                </div>
+            </div>
+
+            <!-- PROFISSIONAL 09 -->
+            <div class="questao">
+                <span class="questao-numero">Profissional • 09</span>
+                <h3>Com que intensidade você deseja arrumar um emprego após sair da escola?</h3>
+                <div class="opcoes">
+                    <label class="opcao">
+                        <input type="radio" name="profissional9" value="O mais rápido possível">
+                        O mais rápido possível
+                    </label>
+                    <label class="opcao">
+                        <input type="radio" name="profissional9" value="Sem pressa">
+                        Sem pressa
+                    </label>
+                    <label class="opcao">
+                        <input type="radio" name="profissional9" value="Estudar primeiro">
+                        Estudar primeiro
+                    </label>
+                    <label class="opcao">
+                        <input type="radio" name="profissional9" value="Não pretendo trabalhar">
+                        Não pretendo trabalhar
+                    </label>
+                </div>
+            </div>
+
+            <!-- PROFISSIONAL 10 -->
+            <div class="questao">
+                <span class="questao-numero">Profissional • 10</span>
+                <h3>Como você imagina sua relação com o chefe e os colegas de trabalho?</h3>
+                <div class="opcoes">
+                    <label class="opcao">
+                        <input type="radio" name="profissional10" value="Muito boa">
+                        Muito boa
+                    </label>
+                    <label class="opcao">
+                        <input type="radio" name="profissional10" value="Boa">
+                        Boa
+                    </label>
+                    <label class="opcao">
+                        <input type="radio" name="profissional10" value="Ruim">
+                        Ruim
+                    </label>
+                    <label class="opcao">
+                        <input type="radio" name="profissional10" value="Muito ruim">
+                        Muito ruim
+                    </label>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             BOTÕES
+        ========================= -->
+
+        <div class="botoes">
+
+            <button
+                type="submit"
+                class="enviar"
+            >
+                ✓ Enviar respostas
+            </button>
+
+            <button
+                type="button"
+                class="apagar"
+                onclick="apagarResultados()"
+            >
+                🗑 Apagar resultados
+            </button>
+
+        </div>
+
+
+        <div
+            class="mensagem"
+            id="mensagem"
+        ></div>
+
+
+    </form>
+
+
+    <!-- =====================================================
+         RESULTADOS
+    ====================================================== -->
+
+    <section id="resultados">
+
+        <div
+            class="resultado-titulo resultado-educacao"
+        >
+
+            <h2>
+                📊 Resultados • Educação
+            </h2>
+
+            <p>
+                Porcentagem das respostas das 10 questões de educação.
+            </p>
+
+        </div>
+
+        <div id="graficosEducacao"></div>
+
+
+        <div
+            class="resultado-titulo resultado-pessoal"
+        >
+
+            <h2>
+                📊 Resultados • Pessoal
+            </h2>
+
+            <p>
+                Porcentagem das respostas das 10 questões pessoais.
+            </p>
+
+        </div>
+
+        <div id="graficosPessoal"></div>
+
+
+        <div
+            class="resultado-titulo resultado-profissional"
+        >
+
+            <h2>
+                📊 Resultados • Profissional
+            </h2>
+
+            <p>
+                Porcentagem das respostas das 10 questões profissionais e socioeconômicas.
+            </p>
+
+        </div>
+
+        <div id="graficosProfissional"></div>
+
+    </section>
+
+
+</div>
+
+
+<footer>
+
+    Pesquisa Socioeconômica • Projeto escolar
+
+</footer>
+
+
+<script>
+
+    /* =====================================================
+       CONFIGURAÇÃO
+    ====================================================== */
+
+    const categorias = {
+
+        educacao: {
+            nome: "Educação",
+            quantidade: 10,
+            container: "graficosEducacao"
+        },
+
+        pessoal: {
+            nome: "Pessoal",
+            quantidade: 10,
+            container: "graficosPessoal"
+        },
+
+        profissional: {
+            nome: "Profissional",
+            quantidade: 10,
+            container: "graficosProfissional"
+        }
+
+    };
+
+
+    const perguntas = {
+
+        educacao1:
+            "Qual é o seu nível de escolaridade?",
+
+        educacao2:
+            "Qual é o nível de escolaridade da sua mãe?",
+
+        educacao3:
+            "Qual é o nível de escolaridade do seu pai?",
+
+        educacao4:
+            "Como você avalia sua convivência na escola?",
+
+        educacao5:
+            "Quantas horas por dia você costuma estudar fora da escola?",
+
+        educacao6:
+            "Você pretende cursar o ensino superior?",
+
+        educacao7:
+            "Você já participou de algum curso além da escola?",
+
+        educacao8:
+            "Qual área de estudo você tem mais interesse?",
+
+        educacao9:
+            "Você pretende continuar estudando depois de concluir o ensino médio?",
+
+        educacao10:
+            "Com que frequência você utiliza a internet para estudar?",
+
+
+        pessoal1:
+            "Qual é a sua idade?",
+
+        pessoal2:
+            "Quantas pessoas moram com você?",
+
+        pessoal3:
+            "Quantos celulares existem na sua casa?",
+
+        pessoal4:
+            "Quantos aparelhos eletrônicos existem na sua casa?",
+
+        pessoal5:
+            "Quantos automóveis existem na sua casa?",
+
+        pessoal6:
+            "Na sua casa possui acesso à internet?",
+
+        pessoal7:
+            "Na sua casa possui notebook ou computador?",
+
+        pessoal8:
+            "Você possui um quarto próprio?",
+
+        pessoal9:
+            "Qual é a sua raça/cor?",
+
+        pessoal10:
+            "Você possui algum meio de transporte próprio?",
+
+
+        profissional1:
+            "Até onde você pretende ir na sua carreira profissional?",
+
+        profissional2:
+            "Aproximadamente, quanto você imagina ganhar daqui a 10 anos?",
+
+        profissional3:
+            "Você já possui um emprego?",
+
+        profissional4:
+            "Se sim, qual é a sua renda mensal?",
+
+        profissional5:
+            "Você se deslocaria para outra cidade em busca de emprego?",
+
+        profissional6:
+            "Para onde você pretende migrar para construir sua carreira profissional?",
+
+        profissional7:
+            "Você pretende estar em um emprego em que seja bem remunerado ou em que goste do que faz?",
+
+        profissional8:
+            "Em que ramo você pretende trabalhar?",
+
+        profissional9:
+            "Com que intensidade você deseja arrumar um emprego após sair da escola?",
+
+        profissional10:
+            "Como você imagina sua relação com o chefe e os colegas de trabalho?"
+
+    };
+
+
+    /* =====================================================
+       BANCO LOCAL
+    ====================================================== */
+
+    let respostas =
+        JSON.parse(
+            localStorage.getItem(
+                "pesquisaSocioeconomica"
+            )
+        ) || [];
+
+
+    let graficos = {};
+
+
+    /* =====================================================
+       ENVIO DO FORMULÁRIO
+    ====================================================== */
+
+    document
+        .getElementById("formulario")
+        .addEventListener(
+            "submit",
+            function(event) {
+
+                event.preventDefault();
+
+
+                const novaResposta = {};
+
+
+                /* EDUCAÇÃO */
+
+                for (
+                    let i = 1;
+                    i <= 10;
+                    i++
+                ) {
+
+                    const campo =
+                        document.querySelector(
+                            `input[name="educacao${i}"]:checked`
+                        );
+
+
+                    if (!campo) {
+
+                        alert(
+                            `Responda a questão ${i} da categoria Educação.`
+                        );
+
+                        document
+                            .querySelector(
+                                `input[name="educacao${i}"]`
+                            )
+                            .scrollIntoView({
+                                behavior: "smooth",
+                                block: "center"
+                            });
+
+                        return;
+
+                    }
+
+
+                    novaResposta[
+                        `educacao${i}`
+                    ] = campo.value;
+
+                }
+
+
+                /* PESSOAL */
+
+                for (
+                    let i = 1;
+                    i <= 10;
+                    i++
+                ) {
+
+                    const campo =
+                        document.querySelector(
+                            `input[name="pessoal${i}"]:checked`
+                        );
+
+
+                    if (!campo) {
+
+                        alert(
+                            `Responda a questão ${i} da categoria Pessoal.`
+                        );
+
+                        document
+                            .querySelector(
+                                `input[name="pessoal${i}"]`
+                            )
+                            .scrollIntoView({
+                                behavior: "smooth",
+                                block: "center"
+                            });
+
+                        return;
+
+                    }
+
+
+                    novaResposta[
+                        `pessoal${i}`
+                    ] = campo.value;
+
+                }
+
+
+                /* PROFISSIONAL */
+
+                for (
+                    let i = 1;
+                    i <= 10;
+                    i++
+                ) {
+
+                    const campo =
+                        document.querySelector(
+                            `input[name="profissional${i}"]:checked`
+                        );
+
+
+                    if (!campo) {
+
+                        alert(
+                            `Responda a questão ${i} da categoria Profissional e Socioeconômica.`
+                        );
+
+                        document
+                            .querySelector(
+                                `input[name="profissional${i}"]`
+                            )
+                            .scrollIntoView({
+                                behavior: "smooth",
+                                block: "center"
+                            });
+
+                        return;
+
+                    }
+
+
+                    novaResposta[
+                        `profissional${i}`
+                    ] = campo.value;
+
+                }
+
+
+                /* SALVAR */
+
+                respostas.push(novaResposta);
+
+
+                localStorage.setItem(
+                    "pesquisaSocioeconomica",
+                    JSON.stringify(respostas)
+                );
+
+
+                /* LIMPAR */
+
+                document
+                    .getElementById("formulario")
+                    .reset();
+
+
+                document
+                    .getElementById("mensagem")
+                    .textContent =
+                    "✓ Resposta registrada com sucesso!";
+
+
+                atualizarResultados();
+
+
+                window.scrollTo({
+                    top: document.body.scrollHeight,
+                    behavior: "smooth"
+                });
+
+            }
+        );
+
+
+    /* =====================================================
+       RESULTADOS
+    ====================================================== */
+
+    function atualizarResultados() {
+
+
+        document
+            .getElementById(
+                "totalParticipantes"
+            )
+            .textContent =
+            respostas.length;
+
+
+        /* destruir gráficos antigos */
+
+        Object.values(graficos)
+            .forEach(
+                grafico => grafico.destroy()
+            );
+
+
+        graficos = {};
+
+
+        /* limpar áreas */
+
+        document
+            .getElementById(
+                "graficosEducacao"
+            )
+            .innerHTML = "";
+
+
+        document
+            .getElementById(
+                "graficosPessoal"
+            )
+            .innerHTML = "";
+
+
+        document
+            .getElementById(
+                "graficosProfissional"
+            )
+            .innerHTML = "";
+
+
+        if (respostas.length === 0) {
+
+            return;
+
+        }
+
+
+        /* gerar os 30 gráficos */
+
+        Object.keys(categorias)
+            .forEach(
+                categoria => {
+
+                    const container =
+                        document.getElementById(
+                            categorias[categoria].container
+                        );
+
+
+                    for (
+                        let i = 1;
+                        i <= categorias[categoria].quantidade;
+                        i++
+                    ) {
+
+                        const chave =
+                            `${categoria}${i}`;
+
+
+                        criarGrafico(
+                            chave,
+                            container,
+                            categoria,
+                            i
+                        );
+
+                    }
+
+                }
+            );
+
+    }
+
+
+    /* =====================================================
+       CRIAR GRÁFICO
+    ====================================================== */
+
+    function criarGrafico(
+        chave,
+        container,
+        categoria,
+        numero
+    ) {
+
+
+        const contagem = {};
+
+
+        respostas.forEach(
+            resposta => {
+
+                const valor =
+                    resposta[chave];
+
+
+                if (
+                    valor !== undefined
+                ) {
+
+                    if (
+                        !contagem[valor]
+                    ) {
+
+                        contagem[valor] = 0;
+
+                    }
+
+
+                    contagem[valor]++;
+
+                }
+
+            }
+        );
+
+
+        const labels =
+            Object.keys(contagem);
+
+
+        const valores =
+            Object.values(contagem);
+
+
+        const bloco =
+            document.createElement(
+                "div"
+            );
+
+
+        bloco.className =
+            "grafico";
+
+
+        bloco.innerHTML = `
+
+            <h3>
+                ${categoria === "educacao"
+                    ? "📚 Educação"
+                    : categoria === "pessoal"
+                    ? "👤 Pessoal"
+                    : "💼 Profissional"
+                }
+                • Questão ${numero}
+                <br>
+                ${perguntas[chave]}
+            </h3>
+
+            <div class="canvas-container">
+
+                <canvas
+                    id="grafico-${chave}">
+                </canvas>
+
+            </div>
+
+            <div
+                class="porcentagens"
+                id="porcentagens-${chave}">
+            </div>
+
+        `;
+
+
+        container.appendChild(bloco);
+
+
+        const canvas =
+            document.getElementById(
+                `grafico-${chave}`
+            );
+
+
+        graficos[chave] =
+            new Chart(
+                canvas,
+                {
+
+                    type: "pie",
+
+                    data: {
+
+                        labels: labels,
+
+                        datasets: [
+
+                            {
+
+                                data: valores,
+
+                                borderWidth: 3,
+
+                                borderColor: window.matchMedia("(prefers-color-scheme: dark)").matches ? "#111827" : "#ffffff",
+                                hoverOffset: 8
+
+                            }
+
+                        ]
+
+                    },
+
+
+                    options: {
+
+                        responsive: true,
+
+                        plugins: {
+
+                            legend: {
+
+                                position: "bottom",
+
+                                labels: {
+
+                                    color: window.matchMedia("(prefers-color-scheme: dark)").matches ? "#f1f5f9" : "#172033",
+
+                                    padding: 15,
+
+                                    font: {
+                                        size: 13
+                                    }
+
+                                }
+
+                            },
+
+
+                            tooltip: {
+
+                                callbacks: {
+
+                                    label:
+                                        function(context) {
+
+                                            const quantidade =
+                                                context.raw;
+
+
+                                            const totalDaPergunta = context.dataset.data.reduce((soma, valor) => soma + valor, 0);
+                                            const percentual = totalDaPergunta ? (quantidade / totalDaPergunta) * 100 : 0;
+
+
+                                            return `
+                                                ${context.label}:
+                                                ${quantidade}
+                                                (${percentual.toFixed(1)}%)
+                                            `;
+
+                                        }
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+            );
+
+
+        /* porcentagens */
+
+        const areaPorcentagens =
+            document.getElementById(
+                `porcentagens-${chave}`
+            );
+
+
+        labels.forEach(
+            (label, index) => {
+
+                const totalDaPergunta = valores.reduce((soma, valor) => soma + valor, 0);
+                const percentual = totalDaPergunta ? (valores[index] / totalDaPergunta) * 100 : 0;
+
+
+                const item =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                item.className =
+                    "porcentagem";
+
+
+                item.textContent =
+                    `${label}: ${percentual.toFixed(1)}%`;
+
+
+                areaPorcentagens
+                    .appendChild(item);
+
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       APAGAR RESULTADOS
+    ====================================================== */
+
+    function apagarResultados() {
+
+
+        const confirmar =
+            confirm(
+                "Tem certeza que deseja apagar todos os resultados?"
+            );
+
+
+        if (!confirmar) {
+
+            return;
+
+        }
+
+
+        respostas = [];
+
+
+        localStorage.removeItem(
+            "pesquisaSocioeconomica"
+        );
+
+
+        atualizarResultados();
+
+
+        document
+            .getElementById(
+                "mensagem"
+            )
+            .textContent =
+            "Todos os resultados foram apagados.";
+
+    }
+
+
+    /* =====================================================
+       INICIAR
+    ====================================================== */
+
+    atualizarResultados();
+
+</script>
+
+
+</body>
+
+</html>
